@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from './../../components/Layout';
 import { Container, Form, Row, Col, Button } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import Input from './../../components/UI/Input';
 import { login } from '../../actions';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
+import { isUserLoggedIn } from '../../actions';
 
 /**
 * @author
@@ -16,8 +17,15 @@ const Signin = (props) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const auth = useSelector(state => state.auth)
 
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if(!auth.authenticate){
+      dispatch(isUserLoggedIn());
+    }
+  }, []);
 
   const userLogin = (e) => {
 
@@ -28,6 +36,10 @@ const Signin = (props) => {
     }
 
     dispatch(login(user));
+  }
+
+  if(auth.authenticate){
+    return <Redirect to={'/'} />
   }
 
   return(
