@@ -1,0 +1,1 @@
+export const api = 'htpp://localhost:2000/api';
